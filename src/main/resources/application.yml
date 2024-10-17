@@ -1,7 +1,7 @@
 spring:
   application.name: product
   datasource:
-    url: jdbc:mysql://mysql:3306/ms_product
+    url: jdbc:mysql://localhost:3306/ms_product
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -13,3 +13,14 @@ server:
   port: 9090
   error:
     include-message: always
+springdoc:
+  swagger-ui.path: /openapi/swagger-ui.html
+  api-docs.path: /openapi/v3/api-docs
+  packagesToScan: com.example.product
+  pathsToMatch: /**
+
+api:
+  responseCodes:
+    ok.description : OK
+    badRequest.description: Bad Request, invalid format of the request. See response message for more information
+    internalServer.description: Internal Server Error. See response message for more information

@@ -1,5 +1,6 @@
 package com.example.product.controller;
 
+import com.example.product.api.ProductApi;
 import com.example.product.model.ProductDto;
 import com.example.product.model.UpdateProductDto;
 import com.example.product.service.AllProductService;
@@ -12,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 @RestController
-public class ProductController {
+public class ProductController implements ProductApi {
 
     private final AllProductService allProductService;
     private final CreateProductService createProductService;
@@ -28,13 +29,16 @@ public class ProductController {
         this.getProductService = getProductService;
     }
 
+    @Override
     @PostMapping
     public ResponseEntity<String> create(
             @Valid @RequestBody ProductDto productDto
     ) {
         return createProductService.execute(productDto);
     }
+
     @GetMapping("{id}")
+    @Override
     public ResponseEntity<ProductDto> obtain(@PathVariable Integer id) {
         return this.getProductService.execute(id);
     }
@@ -49,8 +53,8 @@ public class ProductController {
     }
 
     @GetMapping("all")
+    @Override
     public ResponseEntity<List<ProductDto>> index() {
         return this.allProductService.execute(null);
     }
-
 }
