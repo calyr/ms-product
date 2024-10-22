@@ -1,7 +1,7 @@
 spring:
   application.name: product
   datasource:
-    url: jdbc:mysql://localhost:3306/ms_product
+    url: jdbc:mysql://mysql:3306/ms_product
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -24,3 +24,20 @@ api:
     ok.description : OK
     badRequest.description: Bad Request, invalid format of the request. See response message for more information
     internalServer.description: Internal Server Error. See response message for more information
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  otlp:
+    tracing:
+      endpoint: http://jaeger:4318/v1/traces
+  tracing:
+    sampling:
+      probability: 1.0
+logging:
+  level:
+    root: debug
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
