@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class git add .ObserveService {
+public class ObserveService {
     private final Random random = new Random();
     private static final Logger log = LoggerFactory.getLogger(ObserveService.class);
 
