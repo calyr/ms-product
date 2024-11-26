@@ -26,6 +26,12 @@ services:
       PORT: 9090
     networks:
       - my-network
+  apigateway:
+    image: apigateway:latest
+    ports:
+      - "9191:8080"
+    networks:
+      - my-network
 networks:
   my-network:
     driver: "bridge"
