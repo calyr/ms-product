@@ -7,13 +7,21 @@ import com.example.product.service.AllProductService;
 import com.example.product.service.CreateProductService;
 import com.example.product.service.GetProductService;
 import com.example.product.service.UpdateProductService;
+
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.Tracer;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
+
 @RestController
 public class ProductController implements ProductApi {
+
+    @Autowired
+    private Tracer tracer;
 
     private final AllProductService allProductService;
     private final CreateProductService createProductService;
@@ -55,6 +63,20 @@ public class ProductController implements ProductApi {
     @GetMapping("all")
     @Override
     public ResponseEntity<List<ProductDto>> index() {
-        return this.allProductService.execute(null);
+        // Crear un Span para la solicitud HTTP
+        Span span = tracer.spanBuilder("http-request").startSpan();
+        ResponseEntity<List<ProductDto>> execute = this.allProductService.execute(null);
+        try {
+            // Vincular el Span al contexto
+            span.setAttribute("http.method", "GETALL");
+            span.setAttribute("http.response", execute.getBody().toString());
+
+        } finally {
+            // Completar el Span después de la respuesta
+            span.setAttribute("http.status_code", execute.getStatusCode().value());
+            span.end();
+        }
+
+        return execute;
     }
 }
